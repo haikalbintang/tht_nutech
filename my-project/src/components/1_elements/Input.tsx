@@ -23,9 +23,11 @@ function Input({
 }: InputProps) {
   return (
     <div className="w-full relative">
-      <label className="text-[15px] text-zinc-800 font-medium mt-6 mb-3 block">
-        {label}
-      </label>
+      {label && (
+        <label className="text-[15px] text-zinc-800 font-medium mt-6 mb-3 block">
+          {label}
+        </label>
+      )}
       <input
         type={type}
         className={`placeholder-zinc-300 border text-zinc-500 border-zinc-300 w-full py-3 pl-11 pr-3 text-sm rounded-lg`}
