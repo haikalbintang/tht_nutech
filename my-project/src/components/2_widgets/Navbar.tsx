@@ -4,13 +4,13 @@ export default function Navbar() {
   const navLinks = ["Top Up", "Transaction", "Akun"];
   return (
     <div>
-      <ol className="flex gap-20">
+      <ul className="flex gap-20">
         {navLinks.map((navLink) => (
           <li key={navLink}>
             <h2 className="font-medium text-xl">{navLink}</h2>
           </li>
         ))}
-      </ol>
+      </ul>
     </div>
   );
 }
