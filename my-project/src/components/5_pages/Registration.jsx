@@ -5,6 +5,12 @@ import Form from "../4_templates/Form";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.css";
 import { useState } from "react";
+import Heading2 from "../1_elements/Heading2";
+import Logo from "../1_elements/Logo";
+import LoginIlustration from "../1_elements/LoginIlustration";
+import MainHalf from "../3_modules/MainHalf";
+import Main from "../3_modules/Main";
+import Alternative from "../2_widgets/Alternative";
 
 function Registration() {
   const [currentUser, setCurrentUser] = useState({
@@ -22,35 +28,27 @@ function Registration() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(currentUser),
       });
-      console.log(JSON.stringify(currentUser));
 
       const result = await res.json();
-
-      console.log(result);
 
       if (res.ok) {
         toast.success(result.message);
       } else {
         toast.error(result.message);
       }
-    } catch (err) {
-      console.error("Error", err);
+    } catch (error) {
+      console.error("Error", error);
       toast.error("Terjadi kesalahan");
     }
   }
   return (
     <>
-      <div className="w-full flex">
-        <div className="w-1/2 flex flex-col justify-center items-center p-24">
-          <div className="flex justify-center items-center gap-2 m-4">
-            <img src="/Logo.png" alt="" />
-            <h1 className="text-zinc-800 font-semibold text-2xl">SIMS PPOB</h1>
-          </div>
-          <div>
-            <h2 className="text-zinc-900 font-semibold text-3xl m-4 text-center px-10">
-              Lengkapi data untuk membuat akun
-            </h2>
-          </div>
+      <Main>
+        <MainHalf>
+          <Logo />
+
+          <Heading2>Lengkapi data untuk membuat akun</Heading2>
+
           <Form onSubmit={handleSubmit}>
             <Input
               type="email"
@@ -109,19 +107,17 @@ function Registration() {
               eye={"E"}
               required
             />
+
             <Button bgColor={"[#f42619]"} textColor={"[#fff]"}>
               Registrasi
             </Button>
           </Form>
-          <p className="text-sm text-zinc-500">
-            sudah punya akun? login{" "}
-            <span className="font-semibold text-[#f42619]">di sini</span>
-          </p>
-        </div>
-        <div className="w-1/2">
-          <img src="/IllustrasiLogin.png" alt="" />
-        </div>
-      </div>
+
+          <Alternative>sudah punya akun? login </Alternative>
+        </MainHalf>
+        <LoginIlustration />
+      </Main>
+
       <ToastContainer />
     </>
   );
