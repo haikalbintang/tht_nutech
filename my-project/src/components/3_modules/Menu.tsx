@@ -66,7 +66,7 @@ export default function Menu() {
   return (
     <ul className="flex w-full justify-between mb-16">
       {menuItems.map((menuItem) => (
-        <li className="max-w-20">
+        <li key={menuItem.id} className="max-w-20">
           <img className="w-20" src={menuItem.img} alt={menuItem.text} />
           <h6 className="text-center">{menuItem.text}</h6>
         </li>

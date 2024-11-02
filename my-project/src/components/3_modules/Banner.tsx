@@ -34,7 +34,7 @@ export default function Banner() {
       <h5 className="font-semibold mb-6">Temukan promo menarik</h5>
       <ul className="flex overflow-x-visible gap-10 mb-20">
         {bannerItems.map((bannerItem) => (
-          <li className="">
+          <li key={bannerItem.id}>
             <img
               className="min-w-80"
               src={bannerItem.img}

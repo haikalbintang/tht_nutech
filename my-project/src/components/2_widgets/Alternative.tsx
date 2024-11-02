@@ -9,7 +9,10 @@ export default function Alternative({ children, onClick }: AlternativeProps) {
   return (
     <p className="text-sm text-zinc-500">
       {children}
-      <span onClick={onClick} className="font-semibold text-[#f42619]">
+      <span
+        onClick={onClick}
+        className="font-semibold text-[#f42619] cursor-pointer"
+      >
         di sini
       </span>
     </p>

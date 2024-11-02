@@ -1,6 +1,6 @@
 import Heading2 from "../1_elements/Heading2";
 import LoginIlustration from "../1_elements/LoginIlustration";
-import Logo from "../1_elements/Logo";
+import Logo from "../2_widgets/Logo";
 import Main from "../4_templates/Main";
 import MainHalf from "../4_templates/MainHalf";
 import Form from "../3_modules/Form";
@@ -11,12 +11,14 @@ import { useState } from "react";
 import { BASE_URL } from "../../constants/constants";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [currentUser, setCurrentUser] = useState({
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -33,6 +35,7 @@ function Login() {
       if (res.ok) {
         toast.success(result.message);
         sessionStorage.setItem("token", result.data.token);
+        navigate("/home");
       } else if (result.status === 102) {
         toast.error(result.message);
       } else if (result.status === 103) {
@@ -86,7 +89,9 @@ function Login() {
             </Button>
           </Form>
 
-          <Alternative>belum punya akun? registrasi </Alternative>
+          <Alternative onClick={() => navigate("/registration")}>
+            belum punya akun? registrasi{" "}
+          </Alternative>
         </MainHalf>
         <LoginIlustration />
       </Main>

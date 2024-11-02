@@ -1,16 +1,17 @@
 import { BASE_URL } from "../../constants/constants";
 import Button from "../1_elements/Button";
 import Input from "../1_elements/Input";
-import Form from "../4_templates/Form";
+import Form from "../3_modules/Form";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.css";
 import { useState } from "react";
 import Heading2 from "../1_elements/Heading2";
-import Logo from "../1_elements/Logo";
+import Logo from "../2_widgets/Logo";
 import LoginIlustration from "../1_elements/LoginIlustration";
-import MainHalf from "../3_modules/MainHalf";
-import Main from "../3_modules/Main";
+import MainHalf from "../4_templates/MainHalf";
+import Main from "../4_templates/Main";
 import Alternative from "../2_widgets/Alternative";
+import { useNavigate } from "react-router-dom";
 
 function Registration() {
   const [currentUser, setCurrentUser] = useState({
@@ -19,6 +20,7 @@ function Registration() {
     last_name: "",
     password: "",
   });
+  const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -113,7 +115,9 @@ function Registration() {
             </Button>
           </Form>
 
-          <Alternative>sudah punya akun? login </Alternative>
+          <Alternative onClick={() => navigate("/login")}>
+            sudah punya akun? login{" "}
+          </Alternative>
         </MainHalf>
         <LoginIlustration />
       </Main>
