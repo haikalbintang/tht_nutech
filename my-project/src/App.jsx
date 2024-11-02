@@ -1,9 +1,11 @@
-// import "./App.css";
+import Registration from "./components/5_pages/Registration";
 
 function App() {
   return (
     <div className="flex flex-col justify-center items-center">
-      <div className="max-w-[1366px] bg-red-600 w-full h-10"></div>
+      <div className="max-w-[1366px] w-full min-h-screen">
+        <Registration />
+      </div>
     </div>
   );
 }
