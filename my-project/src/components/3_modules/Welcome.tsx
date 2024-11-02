@@ -1,4 +1,6 @@
 import React from "react";
+import HeadingWelcome from "../1_elements/HeadingWelcome";
+import HeadingName from "../1_elements/HeadingName";
 
 export default function Welcome() {
   return (
@@ -6,8 +8,8 @@ export default function Welcome() {
       <div className="mb-6">
         <img className="w-20" src="/ProfilePhoto.png" alt="" />
       </div>
-      <h1 className="text-2xl">Selamat datang,</h1>
-      <h2 className="text-4xl font-medium">Kristanto Wibowo</h2>
+      <HeadingWelcome>Selamat datang,</HeadingWelcome>
+      <HeadingName>Kristanto Wibowo</HeadingName>
     </div>
   );
 }

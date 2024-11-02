@@ -64,7 +64,7 @@ export default function Menu() {
     },
   ];
   return (
-    <ul className="flex w-full justify-between my-16">
+    <ul className="flex w-full justify-between mb-16">
       {menuItems.map((menuItem) => (
         <li className="max-w-20">
           <img className="w-20" src={menuItem.img} alt={menuItem.text} />

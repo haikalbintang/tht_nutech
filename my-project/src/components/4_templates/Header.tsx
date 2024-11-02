@@ -3,12 +3,13 @@ import LogoSmall from "../2_widgets/LogoSmall";
 
 interface HeaderProps {
   children: ReactNode;
+  onHomeClick: () => void;
 }
 
-function Header({ children }: HeaderProps) {
+function Header({ children, onHomeClick }: HeaderProps) {
   return (
     <div className="flex justify-between items-center">
-      <div>
+      <div className="cursor-pointer" onClick={onHomeClick}>
         <LogoSmall />
       </div>
       {children}

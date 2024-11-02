@@ -1,13 +1,13 @@
 import React from "react";
 
 interface InputProps {
-  type: string,
+  type: string;
   icon: string;
   placeholder: string;
   eye?: string;
   required?: boolean;
-  value: string;
-  onChange: () => void;
+  value: string | number;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 function Input({
@@ -23,7 +23,7 @@ function Input({
     <div className="w-full relative">
       <input
         type={type}
-        className={`placeholder-zinc-300 border text-zinc-500 border-zinc-300 w-full py-3 px-10 text-sm rounded-lg`}
+        className={`placeholder-zinc-300 border text-zinc-500 border-zinc-300 w-full py-3 pl-11 pr-3 text-sm rounded-lg`}
         placeholder={placeholder}
         required={required}
         value={value}

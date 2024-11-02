@@ -7,11 +7,9 @@ interface Heading2Props {
 
 function Heading2({ children }) {
   return (
-    <div>
-      <h2 className="text-zinc-900 font-semibold text-3xl m-4 text-center px-10">
-        {children}
-      </h2>
-    </div>
+    <h2 className="text-zinc-900 font-semibold text-3xl m-4 text-center px-10">
+      {children}
+    </h2>
   );
 }
 

@@ -1,6 +1,6 @@
 // import Login from "./components/5_pages/Login";
 // import Registration from "./components/5_pages/Registration";
-import Dashboard from "./components/5_pages/Dashboard";
+import HomePage from "./components/5_pages/HomePage";
 
 function App() {
   return (
@@ -8,7 +8,7 @@ function App() {
       <div className="max-w-[1366px] w-full min-h-screen">
         {/* <Registration /> */}
         {/* <Login /> */}
-        <Dashboard />
+        <HomePage />
       </div>
     </div>
   );
