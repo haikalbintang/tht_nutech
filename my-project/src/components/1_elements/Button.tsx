@@ -7,6 +7,7 @@ interface ButtonProps {
   textColor: string;
   border?: string;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 function Button({
@@ -15,14 +16,16 @@ function Button({
   textColor,
   border,
   onClick,
+  disabled,
 }: ButtonProps) {
   return (
     <div className="w-full">
       <button
         onClick={onClick}
-        className={`${bgColor} ${textColor} ${
-          border && `${border}`
+        className={`${textColor} ${border && `${border}`} ${
+          disabled ? "bg-zinc-300" : bgColor
         } w-full py-3 rounded-md font-medium mt-6`}
+        disabled={disabled}
       >
         {children}
       </button>

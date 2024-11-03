@@ -4,9 +4,14 @@ import Button from "../1_elements/Button";
 import HeadingWelcome from "../1_elements/HeadingWelcome";
 import HeadingName from "../1_elements/HeadingName";
 import ButtonNominal from "../1_elements/ButtonNominal";
+import { postTopUp } from "../../services/topUp";
 
-export default function TopUp() {
-  const [topUpNominal, setTopUpNominal] = useState("");
+export default function TopUp({topUpNominal, setTopUpNominal, handleTopUp, isLoading}) {
+
+
+  const [isFocus, setIsFocus] = useState(false);
+
+
 
   return (
     <>
@@ -18,35 +23,60 @@ export default function TopUp() {
             type={"number"}
             icon={"W"}
             placeholder={"masukan nominal Top Up"}
-            value={topUpNominal}
-            onChange={(e) => setTopUpNominal(e.target.value)}
+            value={topUpNominal["top_up_amount"]}
+            onChange={(e) =>
+              setTopUpNominal({ top_up_amount: Number(e.target.value) })
+            }
+            onBlur={() => setIsFocus(false)}
+            onFocus={() => setIsFocus(true)}
+            isFocus={isFocus}
           />
-          <Button bgColor={"[#f42619]"} textColor={"[#fff]"}>
-            Top Up
+          <Button
+            onClick={handleTopUp}
+            bgColor={"bg-[#f42619]"}
+            textColor={"text-white"}
+            disabled={
+              Number(topUpNominal.top_up_amount) < 10000 ||
+              Number(topUpNominal.top_up_amount) > 1000000
+            }
+          >
+            {isLoading ? "loading..." : "Top Up"}
           </Button>
         </div>
         <div className="w-2/5 grid grid-cols-3 gap-x-3">
           <div className="grid gap-y-6">
-            <ButtonNominal onClick={() => setTopUpNominal("10000")}>
+            <ButtonNominal
+              onClick={() => setTopUpNominal({ top_up_amount: 10000 })}
+            >
               Rp10.000
             </ButtonNominal>
-            <ButtonNominal onClick={() => setTopUpNominal("100000")}>
+            <ButtonNominal
+              onClick={() => setTopUpNominal({ top_up_amount: 100000 })}
+            >
               Rp100.000
             </ButtonNominal>
           </div>
           <div className="grid gap-y-6">
-            <ButtonNominal onClick={() => setTopUpNominal("20000")}>
+            <ButtonNominal
+              onClick={() => setTopUpNominal({ top_up_amount: 20000 })}
+            >
               Rp20.000
             </ButtonNominal>
-            <ButtonNominal onClick={() => setTopUpNominal("250000")}>
+            <ButtonNominal
+              onClick={() => setTopUpNominal({ top_up_amount: 250000 })}
+            >
               Rp250.000
             </ButtonNominal>
           </div>
           <div className="grid gap-y-6">
-            <ButtonNominal onClick={() => setTopUpNominal("50000")}>
+            <ButtonNominal
+              onClick={() => setTopUpNominal({ top_up_amount: 50000 })}
+            >
               Rp50.000
             </ButtonNominal>
-            <ButtonNominal onClick={() => setTopUpNominal("500000")}>
+            <ButtonNominal
+              onClick={() => setTopUpNominal({ top_up_amount: 500000 })}
+            >
               Rp500.000
             </ButtonNominal>
           </div>

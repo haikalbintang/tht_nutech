@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../2_widgets/Navbar";
 import Balance from "../3_modules/Balance";
 import Banner from "../3_modules/Banner";
@@ -13,6 +13,9 @@ import Profile from "../3_modules/Profile";
 import React from "react";
 import Service from "../3_modules/Service";
 import { navLinks } from "../../constants/navLinks";
+import { BalanceType } from "../../types/transactionModule";
+import { getBalance } from "../../services/balance";
+import { postTopUp } from "../../services/topUp";
 
 interface HomePageProps {
   selectedLink: string;
@@ -20,7 +23,41 @@ interface HomePageProps {
 
 function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
   const [selectedLink, setSelectedLink] = useState(initialLink);
+
+  const [balanceData, setBalanceData] = useState<BalanceType>({
+    balance: 0,
+  });
+  const [balanceError, setBalanceError] = useState<string | null>(null);
+  const [isBalanceLoading, setIsBalanceLoading] = useState(false);
+
+  const [topUpData, setTopUpData] = useState({ balance: 0 });
+  const [topUpError, setTopUpError] = useState<string | null>(null);
+  const [isTopUpLoading, setIsTopUpLoading] = useState(false);
+
+  const [topUpNominal, setTopUpNominal] = useState({ top_up_amount: 0 });
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getBalance(setBalanceData, setBalanceError, setIsBalanceLoading);
+  }, [topUpData]);
+
+  if (balanceError) {
+    console.error(balanceError);
+  }
+
+  async function handleTopUp() {
+    await postTopUp(
+      setTopUpData,
+      setTopUpError,
+      setIsTopUpLoading,
+      topUpNominal
+    );
+  }
+
+  if (topUpError) {
+    console.error(topUpError);
+  }
 
   function handleSelectLink(id: string, path: string) {
     setSelectedLink(id);
@@ -40,7 +77,7 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
         <MainCol>
           <Dashboard>
             <Welcome />
-            <Balance />
+            <Balance isLoading={isBalanceLoading} balanceData={balanceData} />
           </Dashboard>
           <Service />
           <Banner />
@@ -50,16 +87,21 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
         <MainCol>
           <Dashboard>
             <Welcome />
-            <Balance />
+            <Balance isLoading={isBalanceLoading} balanceData={balanceData} />
           </Dashboard>
-          <TopUp />
+          <TopUp
+            topUpNominal={topUpNominal}
+            setTopUpNominal={setTopUpNominal}
+            handleTopUp={handleTopUp}
+            isLoading={isTopUpLoading}
+          />
         </MainCol>
       )}
       {selectedLink === "transaction" && (
         <MainCol>
           <Dashboard>
             <Welcome />
-            <Balance />
+            <Balance isLoading={isBalanceLoading} balanceData={balanceData} />
           </Dashboard>
           <Transaction />
         </MainCol>

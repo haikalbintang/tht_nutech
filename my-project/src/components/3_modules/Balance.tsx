@@ -1,22 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { getBalance } from "../../services/balance";
 import { BalanceType } from "../../types/transactionModule";
 
-export default function Balance() {
-  const [balanceData, setBalanceData] = useState<BalanceType>({
-    balance: 0,
-  });
-  const [balanceError, setBalanceError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+interface BalanceProps {
+  isLoading: boolean;
+  balanceData: BalanceType;
+}
 
-  useEffect(() => {
-    getBalance(setBalanceData, setBalanceError, setIsLoading);
-  }, []);
-
-  if (balanceError) {
-    console.error(balanceError);
-  }
-
+export default function Balance({ isLoading, balanceData }) {
   return (
     <div className="w-3/5 bg-[url('/BackgroundSaldo.png')] bg-left bg-no-repeat bg-contain text-white h-full">
       <div className="w-full h-full flex flex-col justify-between p-9">
