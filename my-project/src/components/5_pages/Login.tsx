@@ -12,11 +12,17 @@ import { BASE_URL } from "../../constants/constants";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import React from "react";
 
 function Login() {
   const [currentUser, setCurrentUser] = useState({
     email: "",
     password: "",
+  });
+  const [validation, setValidation] = useState("");
+  const [isFocus, setIsFocus] = useState({
+    email: false,
+    password: false,
   });
   const navigate = useNavigate();
 
@@ -35,11 +41,12 @@ function Login() {
       if (res.ok) {
         toast.success(result.message);
         sessionStorage.setItem("token", result.data.token);
-        navigate("/home");
+        navigate("/");
       } else if (result.status === 102) {
         toast.error(result.message);
       } else if (result.status === 103) {
         toast.error(result.message);
+        setValidation("email atau password yang anda masukan salah");
       } else {
         toast.error(result.message);
       }
@@ -68,6 +75,19 @@ function Login() {
               onChange={(e) =>
                 setCurrentUser((prev) => ({ ...prev, email: e.target.value }))
               }
+              onBlur={() =>
+                setIsFocus((prev) => ({
+                  ...prev,
+                  email: false,
+                }))
+              }
+              onFocus={() =>
+                setIsFocus((prev) => ({
+                  ...prev,
+                  email: true,
+                }))
+              }
+              isFocus={isFocus.email}
             />
             <Input
               type="password"
@@ -82,9 +102,23 @@ function Login() {
                   password: e.target.value,
                 }))
               }
+              onBlur={() =>
+                setIsFocus((prev) => ({
+                  ...prev,
+                  password: false,
+                }))
+              }
+              onFocus={() =>
+                setIsFocus((prev) => ({
+                  ...prev,
+                  password: true,
+                }))
+              }
+              isFocus={isFocus.password}
+              validation={validation}
             />
 
-            <Button bgColor={"[#f42619]"} textColor={"[#fff]"}>
+            <Button bgColor={"bg-[#f42619]"} textColor={"text-white"}>
               Masuk
             </Button>
           </Form>

@@ -6,13 +6,21 @@ interface ButtonProps {
   bgColor: string;
   textColor: string;
   border?: string;
+  onClick?: () => void;
 }
 
-function Button({ children, bgColor, textColor, border }: ButtonProps) {
+function Button({
+  children,
+  bgColor,
+  textColor,
+  border,
+  onClick,
+}: ButtonProps) {
   return (
     <div className="w-full">
       <button
-        className={`bg-${bgColor} text-${textColor} ${
+        onClick={onClick}
+        className={`${bgColor} ${textColor} ${
           border && `${border}`
         } w-full py-3 rounded-md font-medium mt-6`}
       >
