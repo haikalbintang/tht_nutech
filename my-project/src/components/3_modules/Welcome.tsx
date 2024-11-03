@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import HeadingWelcome from "../1_elements/HeadingWelcome";
 import HeadingName from "../1_elements/HeadingName";
-import { fetchProfile } from "../../services/profile";
+import { getProfile } from "../../services/profile";
 import { Profile } from "../../types/profile";
 import Avatar from "../2_widgets/Avatar";
 
@@ -16,7 +16,7 @@ export default function Welcome() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    fetchProfile(setProfileData, setProfileError, setIsLoading);
+    getProfile(setProfileData, setProfileError, setIsLoading);
   }, []);
 
   if (profileError) {

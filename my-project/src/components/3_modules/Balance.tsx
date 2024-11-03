@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchBalance } from "../../services/transactionModule";
+import { getBalance } from "../../services/balance";
 import { BalanceType } from "../../types/transactionModule";
 
 export default function Balance() {
@@ -10,8 +10,13 @@ export default function Balance() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    fetchBalance(setBalanceData, setBalanceError, setIsLoading);
+    getBalance(setBalanceData, setBalanceError, setIsLoading);
   }, []);
+
+  if (balanceError) {
+    console.error(balanceError);
+  }
+
   return (
     <div className="w-3/5 bg-[url('/BackgroundSaldo.png')] bg-left bg-no-repeat bg-contain text-white h-full">
       <div className="w-full h-full flex flex-col justify-between p-9">
