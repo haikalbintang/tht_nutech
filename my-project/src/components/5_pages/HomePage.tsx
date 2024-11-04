@@ -12,15 +12,13 @@ import Transaction from "../3_modules/Transaction";
 import Profile from "../3_modules/Profile";
 import React from "react";
 import Service from "../3_modules/Service";
-import { navLinks } from "../../constants/navLinks";
-import { BalanceType } from "../../types/transactionModule";
-import { getBalance } from "../../services/balance";
-import { postTopUp } from "../../services/topUp";
-import { getProfile, updateImage, updateProfile } from "../../services/profile";
 import Pay from "../3_modules/Pay";
-import { getService } from "../../services/service";
-import { ServiceType } from "../../types/service";
-import { postPay } from "../../services/pay";
+import { navLinks } from "../../constants/navLinks";
+import { useProfile } from "../../hooks/useProfile";
+import { useBalance } from "../../hooks/useBalance";
+import { useService } from "../../hooks/useService";
+import { useTopUp } from "../../hooks/useTopUp";
+import { usePayment } from "../../hooks/usePayment";
 
 interface HomePageProps {
   selectedLink: string;
@@ -28,134 +26,42 @@ interface HomePageProps {
 
 function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
   const [selectedLink, setSelectedLink] = useState(initialLink);
-
-  const [balanceData, setBalanceData] = useState<BalanceType>({
-    balance: 0,
-  });
-  const [balanceError, setBalanceError] = useState<string | null>(null);
-  const [isBalanceLoading, setIsBalanceLoading] = useState(false);
-
-  const [topUpData, setTopUpData] = useState({ balance: 0 });
-  const [topUpError, setTopUpError] = useState<string | null>(null);
-  const [isTopUpLoading, setIsTopUpLoading] = useState(false);
-
-  const [topUpNominal, setTopUpNominal] = useState({ top_up_amount: 0 });
-
   const [profileImage, setProfileImage] = useState("/ProfilePhoto.png");
-
-  // const [imageData, setImageData] = useState({
-  //   email: "",
-  //   first_name: "",
-  //   last_name: "",
-  //   profile_image: "",
-  // });
-  const [imageError, setImageError] = useState<string | null>(null);
-  const [imageIsLoading, setImageIsLoading] = useState(false);
-
-  const [profileData, setProfileData] = useState({
-    email: "",
-    first_name: "",
-    last_name: "",
-    profile_image: "",
-  });
-  const [profileError, setProfileError] = useState<string | null>(null);
-  const [isProfileLoading, setIsProfileLoading] = useState(false);
-
-  const [currentUser, setCurrentUser] = useState({
-    email: "",
-    first_name: "",
-    last_name: "",
-    profile_image: "",
-  });
-
   const [serviceIsClicked, setServiceIsClicked] = useState(false);
 
-  const [serviceData, setServiceData] = useState<ServiceType[]>([
-    {
-      service_code: "",
-      service_name: "",
-      service_icon: "",
-      service_tariff: 0,
-    },
-  ]);
-  const [serviceError, setServiceError] = useState<string | null>(null);
-  const [isServiceLoading, setIsServiceLoading] = useState(false);
-
-  const [serviceChosen, setServiceChosen] = useState({
-    service_code: "",
-    service_name: "",
-    service_icon: "",
-    service_tariff: 0,
-  });
-
-  const [paymentData, setPaymentData] = useState({
-    invoice_number: "",
-    service_code: "",
-    service_name: "",
-    transaction_type: "",
-    total_amount: Number,
-    created_on: "",
-  });
-  const [paymentError, setPaymentError] = useState<string | null>(null);
-  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
-
-  const paymentCode = { service_code: serviceChosen.service_code };
+  const {
+    profileData,
+    isProfileLoading,
+    profileError,
+    imageError,
+    handleEditProfile,
+    handleImageChange,
+    imageIsLoading,
+    currentUser,
+    setCurrentUser,
+  } = useProfile();
+  const { balanceData, isBalanceLoading, balanceError } = useBalance();
+  const { serviceData, isServiceLoading, serviceError } = useService();
+  const {
+    isTopUpLoading,
+    topUpError,
+    topUpNominal,
+    setTopUpNominal,
+    handleTopUp,
+  } = useTopUp();
+  const {
+    isPaymentLoading,
+    paymentError,
+    serviceChosen,
+    handlePay,
+    setServiceChosen,
+  } = usePayment();
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    getProfile(setProfileData, setProfileError, setIsProfileLoading);
-  }, []);
-
-  useEffect(() => {
-    getBalance(setBalanceData, setBalanceError, setIsBalanceLoading);
-  }, [topUpData]);
-
-  async function handleTopUp() {
-    await postTopUp(
-      setTopUpData,
-      setTopUpError,
-      setIsTopUpLoading,
-      topUpNominal
-    );
-  }
 
   function handleSelectLink(id: string, path: string) {
     setSelectedLink(id);
     navigate(path);
-  }
-
-  async function handleImageChange(e) {
-    const file = e.target.files[0];
-    if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      await updateImage(
-        setProfileData,
-        setImageError,
-        setImageIsLoading,
-        formData
-      );
-    }
-  }
-
-  useEffect(() => {
-    setCurrentUser(profileData);
-  }, [profileData]);
-
-  const editProfileRequestBody = {
-    first_name: currentUser.first_name,
-    last_name: currentUser.last_name,
-  };
-
-  async function handleEditProfile() {
-    await updateProfile(
-      setProfileData,
-      setProfileError,
-      setIsProfileLoading,
-      editProfileRequestBody
-    );
   }
 
   useEffect(() => {
@@ -171,19 +77,6 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
 
   function handleClickService() {
     setServiceIsClicked(true);
-  }
-
-  useEffect(() => {
-    getService(setServiceData, setServiceError, setIsServiceLoading);
-  }, []);
-
-  async function handlePay() {
-    await postPay(
-      setPaymentData,
-      setPaymentError,
-      setIsPaymentLoading,
-      paymentCode
-    );
   }
 
   const errors = [
@@ -215,6 +108,7 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
           selectedLink={selectedLink}
         />
       </Header>
+
       {selectedLink === "home" && (
         <MainCol>
           <Dashboard>
@@ -244,6 +138,7 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
           )}
         </MainCol>
       )}
+
       {selectedLink === "topUp" && (
         <MainCol>
           <Dashboard>
@@ -262,6 +157,7 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
           />
         </MainCol>
       )}
+
       {selectedLink === "transaction" && (
         <MainCol>
           <Dashboard>
@@ -275,6 +171,7 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
           <Transaction />
         </MainCol>
       )}
+
       {selectedLink === "profile" && (
         <MainCol>
           <Profile
