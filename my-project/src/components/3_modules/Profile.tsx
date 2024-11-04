@@ -3,23 +3,44 @@ import Input from "../1_elements/Input";
 import HeadingName from "../1_elements/HeadingName";
 import Button from "../1_elements/Button";
 import { useNavigate } from "react-router-dom";
-import { updateImage } from "../../services/profile";
+import { updateImage, updateProfile } from "../../services/profile";
+import { ProfileType } from "../../types/profile";
+
+interface ProfileProps {
+  profileImage: string;
+  imageIsLoading: boolean;
+  handleImageChange: (e: any) => Promise<void>;
+  profileData: ProfileType;
+  isProfileLoading: boolean;
+  currentUser: ProfileType;
+  setCurrentUser: React.Dispatch<React.SetStateAction<ProfileType>>;
+  handleEditProfile: () => void;
+}
 
 export default function Profile({
   profileImage,
   imageIsLoading,
   handleImageChange,
-}) {
-  const [currentUser, setCurrentUser] = useState({
-    email: "wallet@nutech.com",
-    first_name: "Kristanto",
-    last_name: "Wibowo",
-  });
+  profileData,
+  isProfileLoading,
+  currentUser,
+  setCurrentUser,
+  handleEditProfile,
+}: ProfileProps) {
   const [isFocus, setIsFocus] = useState({
     email: false,
     first_name: false,
     last_name: false,
   });
+
+  // const [profile, setProfile] = useState({
+  //   email: "",
+  //   first_name: "",
+  //   last_name: "",
+  //   profile_image: "",
+  // });
+  const [profileError, setProfileError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -54,7 +75,11 @@ export default function Profile({
           onChange={handleImageChange}
         />
       </div>
-      <HeadingName>Kristanto Wibowo</HeadingName>
+      <HeadingName>
+        {isProfileLoading
+          ? "loading..."
+          : `${profileData.first_name} ${profileData.last_name}`}
+      </HeadingName>
       <Input
         type={"email"}
         icon={"@"}
@@ -121,8 +146,12 @@ export default function Profile({
         }
         isFocus={isFocus.last_name}
       />
-      <Button bgColor={"bg-[#f42619]"} textColor={"text-white"}>
-        Edit Profile
+      <Button
+        onClick={handleEditProfile}
+        bgColor={"bg-[#f42619]"}
+        textColor={"text-white"}
+      >
+        {isProfileLoading ? "loading..." : "Edit Profile and Save"}
       </Button>
       <Button
         border={"border border-[#f42619]"}

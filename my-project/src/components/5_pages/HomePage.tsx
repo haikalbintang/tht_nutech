@@ -16,7 +16,7 @@ import { navLinks } from "../../constants/navLinks";
 import { BalanceType } from "../../types/transactionModule";
 import { getBalance } from "../../services/balance";
 import { postTopUp } from "../../services/topUp";
-import { getProfile, updateImage } from "../../services/profile";
+import { getProfile, updateImage, updateProfile } from "../../services/profile";
 
 interface HomePageProps {
   selectedLink: string;
@@ -39,12 +39,12 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
 
   const [profileImage, setProfileImage] = useState("/ProfilePhoto.png");
 
-  const [imageData, setImageData] = useState({
-    email: "",
-    first_name: "",
-    last_name: "",
-    profile_image: "",
-  });
+  // const [imageData, setImageData] = useState({
+  //   email: "",
+  //   first_name: "",
+  //   last_name: "",
+  //   profile_image: "",
+  // });
   const [imageError, setImageError] = useState<string | null>(null);
   const [imageIsLoading, setImageIsLoading] = useState(false);
 
@@ -56,6 +56,13 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
   });
   const [profileError, setProfileError] = useState<string | null>(null);
   const [isProfileLoading, setIsProfileLoading] = useState(false);
+
+  const [currentUser, setCurrentUser] = useState({
+    email: "",
+    first_name: "",
+    last_name: "",
+    profile_image: "",
+  });
 
   const navigate = useNavigate();
 
@@ -93,10 +100,6 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
     navigate(path);
   }
 
-  useEffect(() => {
-    setProfileImage(imageData.profile_image);
-  }, [imageData, profileData]);
-
   if (imageError) {
     console.error(imageError);
   }
@@ -108,12 +111,30 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
       formData.append("file", file);
 
       await updateImage(
-        setImageData,
+        setProfileData,
         setImageError,
         setImageIsLoading,
         formData
       );
     }
+  }
+
+  useEffect(() => {
+    setCurrentUser(profileData);
+  }, [profileData]);
+
+  const editProfileRequestBody = {
+    first_name: currentUser.first_name,
+    last_name: currentUser.last_name,
+  };
+
+  async function handleEditProfile() {
+    await updateProfile(
+      setProfileData,
+      setProfileError,
+      setIsProfileLoading,
+      editProfileRequestBody
+    );
   }
 
   useEffect(() => {
@@ -180,6 +201,11 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
             profileImage={profileImage}
             imageIsLoading={imageIsLoading}
             handleImageChange={handleImageChange}
+            profileData={profileData}
+            isProfileLoading={isProfileLoading}
+            currentUser={currentUser}
+            setCurrentUser={setCurrentUser}
+            handleEditProfile={handleEditProfile}
           />
         </MainCol>
       )}

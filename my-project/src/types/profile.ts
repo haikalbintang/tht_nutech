@@ -1,10 +1,10 @@
 export interface ProfileResponse {
   status: number;
   message: string;
-  data: Profile | null;
+  data: ProfileType | null;
 }
 
-export interface Profile {
+export interface ProfileType {
   email: string;
   first_name: string;
   last_name: string;

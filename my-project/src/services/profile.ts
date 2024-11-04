@@ -1,4 +1,4 @@
-import { editFileFunction, getFunction, postFunction } from ".";
+import { editFileFunction, editFunction, getFunction, postFunction } from ".";
 import { BASE_URL } from "../constants/constants";
 
 export async function fetchProfile(setData, setError, setIsLoading) {
@@ -42,6 +42,22 @@ export async function updateImage(
     setData,
     setError,
     [102, 108],
+    requestBody
+  );
+}
+
+export async function updateProfile(
+  setData,
+  setError,
+  setIsLoading,
+  requestBody
+) {
+  await editFunction(
+    setIsLoading,
+    "/profile/update",
+    setData,
+    setError,
+    [108],
     requestBody
   );
 }
