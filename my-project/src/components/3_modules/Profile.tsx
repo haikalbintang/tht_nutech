@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../1_elements/Input";
 import HeadingName from "../1_elements/HeadingName";
 import Button from "../1_elements/Button";
 import { useNavigate } from "react-router-dom";
+import { updateImage } from "../../services/profile";
 
 export default function Profile() {
   const [currentUser, setCurrentUser] = useState({
@@ -15,6 +16,18 @@ export default function Profile() {
     first_name: false,
     last_name: false,
   });
+
+  const [profileImage, setProfileImage] = useState("/ProfilePhoto.png");
+
+  const [imageData, setImageData] = useState({
+    email: "",
+    first_name: "",
+    last_name: "",
+    profile_image: "",
+  });
+  const [imageError, setImageError] = useState<string | null>(null);
+  const [imageIsLoading, setImageIsLoading] = useState(false);
+
   const navigate = useNavigate();
 
   function handleLogout() {
@@ -22,17 +35,54 @@ export default function Profile() {
     navigate("/");
   }
 
+  async function handleImageChange(e) {
+    const file = e.target.files[0];
+    if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      await updateImage(
+        setImageData,
+        setImageError,
+        setImageIsLoading,
+        formData
+      );
+    }
+  }
+
+  useEffect(() => {
+    setProfileImage(imageData.profile_image);
+  }, [imageData]);
+
+  if (imageError) {
+    console.error(imageError);
+  }
+
   return (
     <div className="flex flex-col justify-center items-center pb-10 px-72">
       <div className="relative">
-        <img
-          className="w-40 h-40 my-6"
-          src="/ProfilePhoto.png"
-          alt="Profile Photo"
-        />
-        <button className="absolute right-2 bottom-5 border border-zinc-300 rounded-full w-9 h-9">
+        {imageIsLoading ? (
+          "loading..."
+        ) : (
+          <img
+            className="w-40 h-40 my-6 rounded-full"
+            src={profileImage}
+            alt="Profile Photo"
+          />
+        )}
+        <button
+          onClick={() => document.getElementById("profileImageInput")?.click()}
+          className="absolute right-2 bottom-5 border border-zinc-300 rounded-full w-9 h-9"
+        >
           P
         </button>
+        <input
+          type="file"
+          id="profileImageInput"
+          accept="image/jpeg, image/png"
+          className="hidden"
+          onChange={handleImageChange}
+        />
       </div>
       <HeadingName>Kristanto Wibowo</HeadingName>
       <Input
