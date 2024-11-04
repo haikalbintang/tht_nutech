@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { months, transactions } from "../../constants/transactions";
 import { TransactionType } from "../../types/transaction";
 import { getTransactions } from "../../services/transaction";
+import Button from "../1_elements/Button";
 
 export default function Transaction() {
   const [selectedMonth, setSelectedMonth] = useState(9);
@@ -31,13 +32,15 @@ export default function Transaction() {
   }
 
   return (
-    <div>
+    <>
       <h1 className="text-2xl font-medium text-zinc-700">Semua Transaksi</h1>
+
       <ol className="flex gap-4 my-7">
         {months.map((month) => (
           <li
             key={month.id}
-            className={`text-2xl font-medium ${
+            onClick={() => setSelectedMonth(month.id)}
+            className={`cursor-pointer text-2xl font-medium ${
               selectedMonth === month.id ? "text-zinc-700" : "text-zinc-300"
             }`}
           >
@@ -45,56 +48,38 @@ export default function Transaction() {
           </li>
         ))}
       </ol>
-      <div className="flex flex-col">
-        <ol>
-          {isLoading
-            ? "loading..."
-            : transactionData.records.map((transaction, index) => (
-                <li
-                  key={index}
-                  className="flex justify-between items-center my-4 p-7"
+
+      <ol className="flex flex-col">
+        {isLoading
+          ? "loading..."
+          : transactionData.records.map((transaction, index) => (
+              <li
+                key={index}
+                className="flex justify-between items-center my-4 p-7"
+              >
+                <p
+                  className={`${
+                    transaction.transaction_type === "TOPUP"
+                      ? "text-[#5bb693]"
+                      : "text-[#e36042]"
+                  } text-3xl font-medium`}
                 >
-                  {/* <p
-                className={`${
-                  transactions.value === "positive"
-                    ? "text-[#5bb693]"
-                    : "text-[#e36042]"
-                } text-3xl font-medium`}
-              >
-                {transactions.value === "positive" ? "+" : "-"}{" "}
-                {transactions.nominal}
-              </p> */}
-                  <p className={`text-[#5bb693] text-3xl font-medium`}>
-                    {"+ Rp."}
-                    {transaction.total_amount}
-                  </p>
-                  <p className="text-zinc-500">{transaction.description}</p>
-                </li>
-              ))}
-        </ol>
-      </div>
-      <div className="flex flex-col">
-        <ol>
-          {transactions.map((transaction, index) => (
-            <li
-              key={index}
-              className="flex justify-between items-center my-4 p-7"
-            >
-              <p
-                className={`${
-                  transaction.value === "positive"
-                    ? "text-[#5bb693]"
-                    : "text-[#e36042]"
-                } text-3xl font-medium`}
-              >
-                {transaction.value === "positive" ? "+" : "-"}{" "}
-                {transaction.nominal}
-              </p>
-              <p className="text-zinc-500">{transaction.purpose}</p>
-            </li>
-          ))}
-        </ol>
-      </div>
-    </div>
+                  {transaction.transaction_type === "TOPUP" ? "+" : "-"}
+                  {" Rp."}
+                  {transaction.total_amount}
+                </p>
+                <p className="text-zinc-500">{transaction.description}</p>
+              </li>
+            ))}
+      </ol>
+
+      <Button
+        border={"border border-[#f42619] mb-10"}
+        bgColor={"bg-white"}
+        textColor={"text-[#f42619]"}
+      >
+        Show More
+      </Button>
+    </>
   );
 }

@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Input from "../1_elements/Input";
 import HeadingName from "../1_elements/HeadingName";
 import Button from "../1_elements/Button";
 import { useNavigate } from "react-router-dom";
-import { updateImage, updateProfile } from "../../services/profile";
 import { ProfileType } from "../../types/profile";
 
 interface ProfileProps {
@@ -32,15 +31,6 @@ export default function Profile({
     first_name: false,
     last_name: false,
   });
-
-  // const [profile, setProfile] = useState({
-  //   email: "",
-  //   first_name: "",
-  //   last_name: "",
-  //   profile_image: "",
-  // });
-  const [profileError, setProfileError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 

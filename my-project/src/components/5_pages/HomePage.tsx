@@ -199,6 +199,7 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
           setSelectedLink("home");
           setServiceIsClicked(false);
           navigate("/");
+          location.reload();
         }}
       >
         <Navbar
