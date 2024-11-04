@@ -16,6 +16,7 @@ import { navLinks } from "../../constants/navLinks";
 import { BalanceType } from "../../types/transactionModule";
 import { getBalance } from "../../services/balance";
 import { postTopUp } from "../../services/topUp";
+import { getProfile, updateImage } from "../../services/profile";
 
 interface HomePageProps {
   selectedLink: string;
@@ -36,7 +37,35 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
 
   const [topUpNominal, setTopUpNominal] = useState({ top_up_amount: 0 });
 
+  const [profileImage, setProfileImage] = useState("/ProfilePhoto.png");
+
+  const [imageData, setImageData] = useState({
+    email: "",
+    first_name: "",
+    last_name: "",
+    profile_image: "",
+  });
+  const [imageError, setImageError] = useState<string | null>(null);
+  const [imageIsLoading, setImageIsLoading] = useState(false);
+
+  const [profileData, setProfileData] = useState({
+    email: "",
+    first_name: "",
+    last_name: "",
+    profile_image: "",
+  });
+  const [profileError, setProfileError] = useState<string | null>(null);
+  const [isProfileLoading, setIsProfileLoading] = useState(false);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getProfile(setProfileData, setProfileError, setIsProfileLoading);
+  }, []);
+
+  if (profileError) {
+    console.error(profileError);
+  }
 
   useEffect(() => {
     getBalance(setBalanceData, setBalanceError, setIsBalanceLoading);
@@ -64,6 +93,33 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
     navigate(path);
   }
 
+  useEffect(() => {
+    setProfileImage(imageData.profile_image);
+  }, [imageData, profileData]);
+
+  if (imageError) {
+    console.error(imageError);
+  }
+
+  async function handleImageChange(e) {
+    const file = e.target.files[0];
+    if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      await updateImage(
+        setImageData,
+        setImageError,
+        setImageIsLoading,
+        formData
+      );
+    }
+  }
+
+  useEffect(() => {
+    setProfileImage(profileData.profile_image);
+  }, [profileData]);
+
   return (
     <>
       <Header onHomeClick={() => setSelectedLink("home")}>
@@ -76,7 +132,11 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
       {selectedLink === "home" && (
         <MainCol>
           <Dashboard>
-            <Welcome />
+            <Welcome
+              profileImage={profileImage}
+              isLoading={isProfileLoading}
+              profileData={profileData}
+            />
             <Balance isLoading={isBalanceLoading} balanceData={balanceData} />
           </Dashboard>
           <Service />
@@ -86,7 +146,11 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
       {selectedLink === "topUp" && (
         <MainCol>
           <Dashboard>
-            <Welcome />
+            <Welcome
+              profileImage={profileImage}
+              isLoading={isProfileLoading}
+              profileData={profileData}
+            />
             <Balance isLoading={isBalanceLoading} balanceData={balanceData} />
           </Dashboard>
           <TopUp
@@ -100,7 +164,11 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
       {selectedLink === "transaction" && (
         <MainCol>
           <Dashboard>
-            <Welcome />
+            <Welcome
+              profileImage={profileImage}
+              isLoading={isProfileLoading}
+              profileData={profileData}
+            />
             <Balance isLoading={isBalanceLoading} balanceData={balanceData} />
           </Dashboard>
           <Transaction />
@@ -108,7 +176,11 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
       )}
       {selectedLink === "profile" && (
         <MainCol>
-          <Profile />
+          <Profile
+            profileImage={profileImage}
+            imageIsLoading={imageIsLoading}
+            handleImageChange={handleImageChange}
+          />
         </MainCol>
       )}
     </>

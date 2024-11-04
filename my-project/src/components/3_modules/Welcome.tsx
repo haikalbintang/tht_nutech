@@ -5,27 +5,12 @@ import { getProfile } from "../../services/profile";
 import { Profile } from "../../types/profile";
 import Avatar from "../2_widgets/Avatar";
 
-export default function Welcome() {
-  const [profileData, setProfileData] = useState<Profile>({
-    email: "",
-    first_name: "",
-    last_name: "",
-    profile_image: "",
-  });
-  const [profileError, setProfileError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+export default function Welcome({ profileImage, isLoading, profileData }) {
 
-  useEffect(() => {
-    getProfile(setProfileData, setProfileError, setIsLoading);
-  }, []);
-
-  if (profileError) {
-    console.error(profileError);
-  }
 
   return (
     <div className="w-2/5 flex flex-col justify-evenly">
-      <Avatar profileImage={profileData.profile_image} />
+      <Avatar profileImage={profileImage} />
       <HeadingWelcome>Selamat datang,</HeadingWelcome>
       <HeadingName>
         {isLoading

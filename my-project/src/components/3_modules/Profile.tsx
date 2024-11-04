@@ -5,7 +5,11 @@ import Button from "../1_elements/Button";
 import { useNavigate } from "react-router-dom";
 import { updateImage } from "../../services/profile";
 
-export default function Profile() {
+export default function Profile({
+  profileImage,
+  imageIsLoading,
+  handleImageChange,
+}) {
   const [currentUser, setCurrentUser] = useState({
     email: "wallet@nutech.com",
     first_name: "Kristanto",
@@ -17,45 +21,11 @@ export default function Profile() {
     last_name: false,
   });
 
-  const [profileImage, setProfileImage] = useState("/ProfilePhoto.png");
-
-  const [imageData, setImageData] = useState({
-    email: "",
-    first_name: "",
-    last_name: "",
-    profile_image: "",
-  });
-  const [imageError, setImageError] = useState<string | null>(null);
-  const [imageIsLoading, setImageIsLoading] = useState(false);
-
   const navigate = useNavigate();
 
   function handleLogout() {
     sessionStorage.removeItem("token");
     navigate("/");
-  }
-
-  async function handleImageChange(e) {
-    const file = e.target.files[0];
-    if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      await updateImage(
-        setImageData,
-        setImageError,
-        setImageIsLoading,
-        formData
-      );
-    }
-  }
-
-  useEffect(() => {
-    setProfileImage(imageData.profile_image);
-  }, [imageData]);
-
-  if (imageError) {
-    console.error(imageError);
   }
 
   return (
