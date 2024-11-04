@@ -2,32 +2,32 @@ import React, { useEffect, useState } from "react";
 import { getService } from "../../services/service";
 import { ServiceType } from "../../types/service";
 
-export default function Service() {
-  const [serviceData, setServiceData] = useState<ServiceType[]>([
-    {
-      service_code: "",
-      service_name: "",
-      service_icon: "",
-      service_tariff: 0,
-    },
-  ]);
-  const [serviceError, setServiceError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+interface ServiceProps {
+  onClickService: (service: ServiceType) => void;
+  isLoading: boolean;
+  serviceData: ServiceType[];
+  handleClickService: () => void;
+}
 
-  useEffect(() => {
-    getService(setServiceData, setServiceError, setIsLoading);
-  }, []);
-
-  if (serviceError) {
-    console.error(serviceError);
-  }
-
+export default function Service({
+  onClickService,
+  isLoading,
+  serviceData,
+  handleClickService,
+}: ServiceProps) {
   return (
     <ul className="flex w-full justify-between mb-16">
       {isLoading
         ? "loading..."
         : serviceData.map((serviceItem) => (
-            <li key={serviceItem.service_code} className="max-w-20">
+            <li
+              key={serviceItem.service_code}
+              onClick={() => {
+                onClickService(serviceItem);
+                handleClickService();
+              }}
+              className="max-w-20 cursor-pointer"
+            >
               <img
                 className="w-20"
                 src={serviceItem.service_icon}

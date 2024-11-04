@@ -17,6 +17,10 @@ import { BalanceType } from "../../types/transactionModule";
 import { getBalance } from "../../services/balance";
 import { postTopUp } from "../../services/topUp";
 import { getProfile, updateImage, updateProfile } from "../../services/profile";
+import Pay from "../3_modules/Pay";
+import { getService } from "../../services/service";
+import { ServiceType } from "../../types/service";
+import { postPay } from "../../services/pay";
 
 interface HomePageProps {
   selectedLink: string;
@@ -64,23 +68,48 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
     profile_image: "",
   });
 
+  const [serviceIsClicked, setServiceIsClicked] = useState(false);
+
+  const [serviceData, setServiceData] = useState<ServiceType[]>([
+    {
+      service_code: "",
+      service_name: "",
+      service_icon: "",
+      service_tariff: 0,
+    },
+  ]);
+  const [serviceError, setServiceError] = useState<string | null>(null);
+  const [isServiceLoading, setIsServiceLoading] = useState(false);
+
+  const [serviceChosen, setServiceChosen] = useState({
+    service_code: "",
+    service_name: "",
+    service_icon: "",
+    service_tariff: 0,
+  });
+
+  const [paymentData, setPaymentData] = useState({
+    invoice_number: "",
+    service_code: "",
+    service_name: "",
+    transaction_type: "",
+    total_amount: Number,
+    created_on: "",
+  });
+  const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
+
+  const paymentCode = { service_code: serviceChosen.service_code };
+
   const navigate = useNavigate();
 
   useEffect(() => {
     getProfile(setProfileData, setProfileError, setIsProfileLoading);
   }, []);
 
-  if (profileError) {
-    console.error(profileError);
-  }
-
   useEffect(() => {
     getBalance(setBalanceData, setBalanceError, setIsBalanceLoading);
   }, [topUpData]);
-
-  if (balanceError) {
-    console.error(balanceError);
-  }
 
   async function handleTopUp() {
     await postTopUp(
@@ -91,17 +120,9 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
     );
   }
 
-  if (topUpError) {
-    console.error(topUpError);
-  }
-
   function handleSelectLink(id: string, path: string) {
     setSelectedLink(id);
     navigate(path);
-  }
-
-  if (imageError) {
-    console.error(imageError);
   }
 
   async function handleImageChange(e) {
@@ -141,9 +162,43 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
     setProfileImage(profileData.profile_image);
   }, [profileData]);
 
+  function handleClickService() {
+    setServiceIsClicked(true);
+  }
+
+  useEffect(() => {
+    getService(setServiceData, setServiceError, setIsServiceLoading);
+  }, []);
+
+  async function handlePay() {
+    await postPay(
+      setPaymentData,
+      setPaymentError,
+      setIsPaymentLoading,
+      paymentCode
+    );
+  }
+
+  const errors = [
+    profileError,
+    balanceError,
+    imageError,
+    topUpError,
+    serviceError,
+    paymentError,
+  ];
+  for (let i = 0; i < errors.length; i++) {
+    if (errors[i]) console.error(errors[i]);
+  }
+
   return (
     <>
-      <Header onHomeClick={() => setSelectedLink("home")}>
+      <Header
+        onHomeClick={() => {
+          setSelectedLink("home");
+          setServiceIsClicked(false);
+        }}
+      >
         <Navbar
           navLinks={navLinks}
           onSelectLink={(id, path) => handleSelectLink(id, path)}
@@ -160,8 +215,23 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
             />
             <Balance isLoading={isBalanceLoading} balanceData={balanceData} />
           </Dashboard>
-          <Service />
-          <Banner />
+          {serviceIsClicked ? (
+            <Pay
+              serviceChosen={serviceChosen}
+              isLoading={isPaymentLoading}
+              handlePay={handlePay}
+            />
+          ) : (
+            <>
+              <Service
+                onClickService={setServiceChosen}
+                handleClickService={handleClickService}
+                isLoading={isServiceLoading}
+                serviceData={serviceData}
+              />
+              <Banner />
+            </>
+          )}
         </MainCol>
       )}
       {selectedLink === "topUp" && (

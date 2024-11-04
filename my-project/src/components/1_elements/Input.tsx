@@ -7,12 +7,12 @@ interface InputProps {
   eye?: string;
   required?: boolean;
   value: string | number;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   label?: string;
   validation?: string;
-  onBlur: () => void;
-  onFocus: () => void;
-  isFocus: boolean;
+  onBlur?: () => void;
+  onFocus?: () => void;
+  isFocus?: boolean;
 }
 
 function Input({

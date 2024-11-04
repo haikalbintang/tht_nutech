@@ -47,12 +47,14 @@ export default function Transaction() {
       </ol>
       <div className="flex flex-col">
         <ol>
-          {transactionData.records.map((transaction, index) => (
-            <li
-              key={index}
-              className="flex justify-between items-center my-4 p-7"
-            >
-              {/* <p
+          {isLoading
+            ? "loading..."
+            : transactionData.records.map((transaction, index) => (
+                <li
+                  key={index}
+                  className="flex justify-between items-center my-4 p-7"
+                >
+                  {/* <p
                 className={`${
                   transactions.value === "positive"
                     ? "text-[#5bb693]"
@@ -62,13 +64,13 @@ export default function Transaction() {
                 {transactions.value === "positive" ? "+" : "-"}{" "}
                 {transactions.nominal}
               </p> */}
-              <p className={`text-[#5bb693] text-3xl font-medium`}>
-                {"+ Rp."}
-                {transaction.total_amount}
-              </p>
-              <p className="text-zinc-500">{transaction.description}</p>
-            </li>
-          ))}
+                  <p className={`text-[#5bb693] text-3xl font-medium`}>
+                    {"+ Rp."}
+                    {transaction.total_amount}
+                  </p>
+                  <p className="text-zinc-500">{transaction.description}</p>
+                </li>
+              ))}
         </ol>
       </div>
       <div className="flex flex-col">
