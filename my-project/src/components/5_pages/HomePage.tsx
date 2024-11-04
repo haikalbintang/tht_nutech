@@ -159,8 +159,14 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
   }
 
   useEffect(() => {
-    if (profileImage === "/ProfilePhoto.png") return;
-    setProfileImage(profileData.profile_image);
+    if (
+      profileData.profile_image ===
+      "https://minio.nutech-integrasi.com/take-home-test/null"
+    )
+      setProfileImage("/ProfilePhoto.png");
+    else {
+      setProfileImage(profileData.profile_image);
+    }
   }, [profileData]);
 
   function handleClickService() {
