@@ -21,6 +21,7 @@ export default function Banner() {
   if (bannerError) {
     console.error(bannerError);
   }
+
   return (
     <>
       <h5 className="font-semibold mb-6">Temukan promo menarik</h5>
