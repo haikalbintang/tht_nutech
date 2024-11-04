@@ -187,6 +187,7 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
     serviceError,
     paymentError,
   ];
+
   for (let i = 0; i < errors.length; i++) {
     if (errors[i]) console.error(errors[i]);
   }
@@ -197,6 +198,7 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
         onHomeClick={() => {
           setSelectedLink("home");
           setServiceIsClicked(false);
+          navigate("/");
         }}
       >
         <Navbar
