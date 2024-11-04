@@ -41,17 +41,21 @@ function Registration() {
       confirmPassword.password1 !== confirmPassword.password2
     ) {
       setValidation("password tidak sama");
-      return;
+      return false;
     } else {
       currentUser.password = confirmPassword.password1;
       setValidation("");
+      return true;
     }
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    checkPassword();
+    const passwordsAreSame = checkPassword();
+    if (!passwordsAreSame) {
+      return;
+    }
 
     try {
       const res = await fetch(BASE_URL + "/registration", {
@@ -63,19 +67,18 @@ function Registration() {
       const result = await res.json();
 
       if (res.ok) {
-        toast.success(result.message);
-        // navigate("/login");
+        toast.success(result.message, { position: "top-center" });
       } else if (result.status === 102) {
-        // navigate("/login");
-        toast.error(result.message);
+        toast.error(result.message, { position: "top-center" });
       } else {
-        toast.error(result.message);
+        toast.error(result.message, { position: "top-center" });
       }
     } catch (error) {
       console.error("Error", error);
-      toast.error("Terjadi kesalahan");
+      toast.error("Terjadi kesalahan", { position: "top-center" });
     }
   }
+
   return (
     <>
       <Main>

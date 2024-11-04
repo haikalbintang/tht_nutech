@@ -39,21 +39,21 @@ function Login() {
       const result = await res.json();
 
       if (res.ok) {
-        toast.success(result.message);
+        toast.success(result.message, { position: "top-center" });
         sessionStorage.setItem("token", result.data.token);
         navigate("/");
       } else if (result.status === 102) {
-        toast.error(result.message);
+        toast.error(result.message, { position: "top-center" });
       } else if (result.status === 103) {
-        toast.error(result.message);
+        toast.error(result.message, { position: "top-center" });
         setValidation("email atau password yang anda masukan salah");
       } else {
-        toast.error(result.message);
+        toast.error(result.message, { position: "top-center" });
       }
     } catch (error) {
       console.error("Error", error);
 
-      toast.error("Terjadi kesalahan");
+      toast.error("Terjadi kesalahan", { position: "top-center" });
     }
   }
 

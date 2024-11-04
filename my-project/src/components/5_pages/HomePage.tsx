@@ -159,6 +159,7 @@ function HomePage({ selectedLink: initialLink = "home" }: HomePageProps) {
   }
 
   useEffect(() => {
+    if (profileImage === "/ProfilePhoto.png") return;
     setProfileImage(profileData.profile_image);
   }, [profileData]);
 
